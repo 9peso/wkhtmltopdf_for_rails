@@ -17,7 +17,10 @@ class Wkhtmltopdf
       wkhtml_call << "#{@html_file}"
     end
     wkhtml_call << " #{@params_string} - -q"
-    IO.popen(wkhtml_call, "rb").read
+    IO.popen(wkhtml_call, "rb") do |io|
+      Process.detach io.pid
+      io.read
+    end
   end
 
   private
